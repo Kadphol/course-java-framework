@@ -1,10 +1,13 @@
 package com.example.demoapp.employees;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -16,7 +19,16 @@ public class EmployeeControllerWebMvcTest {
 
     @Test
     public void getEmployeeById() throws Exception {
-        mvc.perform(get("/employees/100"))
-                .andExpect(status().isOk());
+        int id = 100;
+        MvcResult result = mvc.perform(get("/employees/100"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        byte[] json = result.getResponse().getContentAsByteArray();
+        ObjectMapper mapper = new ObjectMapper();
+        EmployeeResponse response = mapper.readValue(json, EmployeeResponse.class);
+
+        assertEquals(id, response.getId());
+        assertEquals("somkiat", response.getName());
     }
 }
