@@ -20,6 +20,6 @@ public class EmployeeService {
             response.setName(result.get().getName());
             return response;
         }
-        throw new RuntimeException("Employee not found id=" + id);
+        throw new EmployeeNotFoundException("Employee not found id=" + id);
     }
 }
