@@ -1,5 +1,7 @@
 package com.example.demoapp.employees;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +18,11 @@ class EmployeeControllerTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @AfterEach
+    public void deleteDataForTest() {
+        employeeRepository.deleteAll();
+    }
+
     @Test
     public void getEmployeeById() {
         // Arrange
@@ -29,6 +36,7 @@ class EmployeeControllerTest {
         // Assert
         assertEquals(id, result.getId());
         assertEquals("someone", result.getName());
+
     }
 
     @Test
