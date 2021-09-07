@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
@@ -24,7 +26,7 @@ class EmployeeControllerServiceTest {
     private EmployeeRepository employeeRepository;
 
     @Test
-    @DisplayName("success case")
+    @DisplayName("Success case")
     public void case01() {
         // Arrange
         int id = 1;
@@ -39,5 +41,20 @@ class EmployeeControllerServiceTest {
         assertEquals(id, result.getId());
         assertEquals("someone", result.getName());
 
+    }
+
+    @Test
+    @DisplayName("Failure case : Employee not found id = 100")
+    public void case02() {
+        //Arrange
+        int id = 100;
+        when(employeeRepository.findById(id)).thenReturn(Optional.empty());
+        // Act
+        ResponseEntity<ErrorResponse> result
+                = restTemplate.getForEntity("/employees/" + id, ErrorResponse.class);
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND.value(), result.getStatusCodeValue());
+        assertEquals(404, result.getBody().getCode());
+        assertEquals("Employee not found id=100", result.getBody().getDetail());
     }
 }
