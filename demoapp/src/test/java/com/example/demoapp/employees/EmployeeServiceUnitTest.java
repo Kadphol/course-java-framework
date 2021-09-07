@@ -37,7 +37,6 @@ public class EmployeeServiceUnitTest {
     @Test
     @DisplayName("Fail case : Employee not found")
     public void case02() {
-        String message = null;
         when(employeeRepository.findById(100)).thenReturn(Optional.empty());
         EmployeeService employeeService = new EmployeeService(employeeRepository);
 
@@ -49,6 +48,17 @@ public class EmployeeServiceUnitTest {
                 fail("Message fail with = " + e.getMessage());
             }
         }
+    }
+
+    @Test
+    @DisplayName("Fail case with JUnit5 : Employee not found")
+    public void case03() {
+        when(employeeRepository.findById(1)).thenReturn(Optional.empty());
+        EmployeeService employeeService = new EmployeeService(employeeRepository);
+        Exception exception = assertThrows(EmployeeNotFoundException.class, ()-> {
+            employeeService.getById(1);
+        });
+        assertEquals("Employee not found id=1",exception.getMessage());
     }
 
 }
