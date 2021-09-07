@@ -14,7 +14,7 @@ public class EmployeeController {
     @GetMapping("/employees/{id}")
     public EmployeeResponse getEmployeeById(@PathVariable String id) {
 //       Validate input
-//       Claening data
+//       Cleaning data
         EmployeeResponse response = employeeService.getById(Integer.parseInt(id));
 
         return response;
